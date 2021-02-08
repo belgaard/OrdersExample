@@ -1,0 +1,47 @@
+orders:
+  replicaCount: 1
+
+  image:
+    repository: artifacts.cf.saxo/docker/users/bb/orders
+    pullPolicy: IfNotPresent
+    tag: ""
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+    hosts:
+      - host: orders.local
+        paths: 
+          - path: /orders
+
+  autoscaling:
+    enabled: false
+
+  serviceAccount:
+    create: false
+
+tbl:
+  replicaCount: 1
+
+  image:
+    repository: artifacts.cf.saxo/docker/users/bb/tbl
+    pullPolicy: IfNotPresent
+    tag: ""
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+
+  autoscaling:
+    enabled: false
+
+  serviceAccount:
+    create: false

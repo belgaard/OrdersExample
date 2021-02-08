@@ -1,0 +1,18 @@
+FROM artifacts.cf.saxo/docker-base/base/saxo-dotnet-sdk:5.0-alpine-ci-1.0.20 AS build
+WORKDIR /sln
+
+# Copy project file and restore
+COPY "./tbl.csproj" "./src/tbl/"
+RUN dotnet restore ./src/tbl/tbl.csproj -s https://artifacts.cf.saxo/artifactory/api/nuget/ThirdPartyNuget
+
+# Copy the actual source code
+COPY "." "./src/tbl"
+
+# Build and publish the app
+RUN dotnet publish "./src/tbl/tbl.csproj" -c Release -o /app/publish
+
+#FINAL image
+FROM artifacts.cf.saxo/docker-base/base/saxo-dotnet-sdk:5.0-alpine-ci-1.0.20
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "tbl.dll"]
