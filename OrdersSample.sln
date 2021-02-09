@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B35F1B6F-D1B4-4507-A5EC-C590CF2760EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "orders", "src\orders\orders.csproj", "{BC765F2E-9695-45F6-A86D-7AE886DC674B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders", "src\orders\Orders.csproj", "{BC765F2E-9695-45F6-A86D-7AE886DC674B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tbl", "src\tbl\tbl.csproj", "{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tbl", "src\tbl\Tbl.csproj", "{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BC765F2E-9695-45F6-A86D-7AE886DC674B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -47,8 +44,14 @@ Global
 		{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA}.Release|x86.ActiveCfg = Release|Any CPU
 		{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BC765F2E-9695-45F6-A86D-7AE886DC674B} = {B35F1B6F-D1B4-4507-A5EC-C590CF2760EE}
 		{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA} = {B35F1B6F-D1B4-4507-A5EC-C590CF2760EE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02BB750D-B841-4D28-8773-D0B7EA97449A}
 	EndGlobalSection
 EndGlobal
