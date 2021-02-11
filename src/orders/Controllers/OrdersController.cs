@@ -23,7 +23,7 @@ namespace Orders.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<OrderResponse>> PlaceOrderAsync([Required, FromBody] PlaceOrderRequest placeOrderRequest)
+        public async Task<ActionResult<GenericOrderResponse>> PlaceOrderAsync([Required, FromBody] PlaceOrderRequest placeOrderRequest)
         {
             return await _placeOrderRequestHandler.ProcessAsync(placeOrderRequest);
         }

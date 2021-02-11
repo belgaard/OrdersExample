@@ -11,7 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Orders.ExternalDependencies;
+using Orders.Orders;
 using Orders.Orders.PlaceOrder;
+using Orders.Qte;
 
 namespace Orders
 {
@@ -33,7 +36,13 @@ namespace Orders
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "orders", Version = "v1" });
             });
 
+            // TODO: Move QTE stuff to its own composition root!
             services.AddSingleton<PlaceOrderRequestHandler>();
+            services.AddSingleton<Qte.Qte>();
+            services.AddSingleton<PlaceOrderRequestHandler>();
+            services.AddSingleton<QteOrderMapper>();
+            services.AddSingleton<ISessionTradesFacade, SessionTradesFacade>();
+            services.AddSingleton<ISessionTrading, SessionTrading>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
