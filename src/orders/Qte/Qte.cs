@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using Orders.ExternalDependencies;
-using Orders.Orders;
-using Orders.Orders.PlaceOrder;
 using Orders.SharedDomain;
-using ProtoBuf;
 
 namespace Orders.Qte
 {
@@ -67,37 +63,20 @@ namespace Orders.Qte
     public enum OpenOrderDuration
     {
         /// <summary>Unspecified duration</summary>
-        Unknown,
+        UnknownOpenOrderDuration,
         /// <summary>Working until specified date</summary>
         GoodTillDate
     }
-    [ProtoContract()]
     public class PlaceRelatedOrderRequest
     {
-        [ProtoMember(1)]
         public BuySell BuySell { get; set; }
-
-        [ProtoMember(2)]
         public double Amount { get; set; }
-
-        [ProtoMember(3)]
         public double Price { get; set; }
-
-        [ProtoMember(4)]
         public OpenOrderType OrderType { get; set; }
-
-        [ProtoMember(5)]
         public OpenOrderDuration OrderDuration { get; set; }
-
-        [ProtoMember(6)]
         public OrderExpireData? OrderExpireData { get; set; }
-
-        [ProtoMember(7)]
         public TrailingStop? TrailingStop { get; set; }
-
-        [ProtoMember(8)]
         public OpenOrderRelation? OpenOrderRelation { get; set; }
-        [ProtoMember(9)]
         public double? OrderPriceLevel2 { get; set; }
     }
     public struct OrderExpireData
@@ -117,64 +96,41 @@ namespace Orders.Qte
     /// <summary> Cfd </summary>
     Cfd = 128, // 0x00000080
  }
-[ProtoContract]
 public struct PlaceOrderRequest
   {
-      [ProtoMember(1)]
       public int Uic { get; set; }
-
-      [ProtoMember(2)]
     public InstrumentTypes InstrumentType { get; set; }
-
-    [ProtoMember(3)]
     public BuySell BuySell { get; set; }
-
-    [ProtoMember(4)]
     public double Amount { get; set; }
-
-    [ProtoMember(5)]
     public double Price { get; set; }
-
-    [ProtoMember(6)]
     public OpenOrderType OrderType { get; set; }
-
-    [ProtoMember(7)]
     public OpenOrderDuration OrderDuration { get; set; }
-
-    [ProtoMember(8)]
     public OrderExpireData? OrderExpireData { get; set; }
-    [ProtoMember(9)]
     public double? OrderPriceLevel2 { get; set; }
-    [ProtoMember(10)]
     public TrailingStop? TrailingStop { get; set; }
-    [ProtoMember(11)]
     public OpenOrderRelation? OpenOrderRelation { get; set; }
-    [ProtoMember(12)]
     public EntityId? RelatedPositionId { get; set; }
-    [ProtoMember(13)]
     public IEnumerable<PlaceRelatedOrderRequest> RelatedOrders { get; set; }
   }
   [Serializable]
-  [ProtoContract]
   public struct EntityId : IEquatable<EntityId>, ISerializable
   {
       public static readonly EntityId Default = new EntityId(0);
-      [ProtoMember(1)]
       public long Value { get; set; }
 
-      private EntityId(int value) => this.Value = (long) value;
+      private EntityId(int value) => Value = (long) value;
 
-      private EntityId(long value) => this.Value = value;
+      private EntityId(long value) => Value = value;
 
-      public override string ToString() => this.Value.ToString((IFormatProvider) CultureInfo.InvariantCulture);
+      public override string ToString() => Value.ToString((IFormatProvider) CultureInfo.InvariantCulture);
 
-      public void GetObjectData(SerializationInfo info, StreamingContext context) => info?.AddValue("Value", this.Value);
+      public void GetObjectData(SerializationInfo info, StreamingContext context) => info?.AddValue("Value", Value);
 
-      public override int GetHashCode() => this.Value.GetHashCode();
+      public override int GetHashCode() => Value.GetHashCode();
 
-      public bool Equals(EntityId other) => this.Value == other.Value;
+      public bool Equals(EntityId other) => Value == other.Value;
 
-      public override bool Equals(object obj) => obj is EntityId other && this.Equals(other);
+      public override bool Equals(object obj) => obj is EntityId other && Equals(other);
 
       public static bool operator ==(EntityId first, EntityId second) => first.Equals(second);
 
@@ -184,7 +140,7 @@ public struct PlaceOrderRequest
 
       public static implicit operator EntityId(int entityId) => new EntityId(entityId);
 
-      public int ToInt32() => (int) this.Value;
+      public int ToInt32() => (int) Value;
 
       public EntityId FromInt32(int value) => new EntityId(value);
 
@@ -192,28 +148,28 @@ public struct PlaceOrderRequest
 
       public static implicit operator EntityId(long entityId) => new EntityId(entityId);
 
-      public long ToInt64() => this.Value;
+      public long ToInt64() => Value;
 
       public EntityId FromInt64(long value) => new EntityId(value);
   }
 
   public readonly struct TrailingStop : IEquatable<TrailingStop>
   {
-      public TrailingStop(Decimal distanceToMarket, Decimal step)
+      public TrailingStop(double distanceToMarket, double step)
       {
-          this.DistanceToMarket = distanceToMarket;
-          this.Step = step;
+          DistanceToMarket = distanceToMarket;
+          Step = step;
       }
 
-      public Decimal DistanceToMarket { get; }
+      public double DistanceToMarket { get; }
 
-      public Decimal Step { get; }
+      public double Step { get; }
 
-      public override int GetHashCode() => this.DistanceToMarket.GetHashCode() * 397 ^ this.Step.GetHashCode();
+      public override int GetHashCode() => DistanceToMarket.GetHashCode() * 397 ^ Step.GetHashCode();
 
-      public bool Equals(TrailingStop other) => this.DistanceToMarket.Equals(other.DistanceToMarket) && this.Step.Equals(other.Step);
+      public bool Equals(TrailingStop other) => DistanceToMarket.Equals(other.DistanceToMarket) && Step.Equals(other.Step);
 
-      public override bool Equals(object obj) => obj != null && obj is TrailingStop other && this.Equals(other);
+      public override bool Equals(object obj) => obj != null && obj is TrailingStop other && Equals(other);
 
       public static bool operator ==(TrailingStop first, TrailingStop second) => first.Equals(second);
 

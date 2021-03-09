@@ -1,22 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Orders.ExternalDependencies;
-using Orders.Orders;
 using Orders.Orders.PlaceOrder;
 using Orders.Qte;
-using ProtoBuf;
-using PlaceOrderRequest = Orders.Qte.PlaceOrderRequest;
 
 namespace Orders
 {
@@ -45,8 +35,6 @@ namespace Orders
             services.AddSingleton<QteOrderMapper>();
             services.AddSingleton<ISessionTradesFacade, SessionTradesFacade>();
             services.AddSingleton<ISessionTrading, SessionTrading>();
-
-            var p = Serializer.GetProto<PlaceOrderRequest>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
