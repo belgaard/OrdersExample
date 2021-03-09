@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Tbl.Services;
+using Tbl.TestDouble.Services;
 
-namespace Tbl
+namespace Tbl.TestDouble
 {
     public class Startup
     {
@@ -14,6 +14,7 @@ namespace Tbl
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddGrpcReflection();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,7 +29,9 @@ namespace Tbl
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<TblService>();
+                if (env.IsDevelopment())
+                    endpoints.MapGrpcReflectionService();
 
                 endpoints.MapGet("/", async context =>
                 {

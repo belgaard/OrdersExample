@@ -66,11 +66,11 @@ namespace Orders.Qte
     public enum OpenOrderDuration
     {
         /// <summary>Unspecified duration</summary>
-        Unknown,
+        UnknownOpenOrderDuration,
         /// <summary>Working until specified date</summary>
         GoodTillDate
     }
-    public struct PlaceRelatedOrderRequest
+    public class PlaceRelatedOrderRequest
     {
         public BuySell BuySell { get; set; }
 
@@ -106,9 +106,9 @@ namespace Orders.Qte
     /// <summary> Cfd </summary>
     Cfd = 128, // 0x00000080
  }
-  public struct PlaceOrderRequest
+public struct PlaceOrderRequest
   {
-    public int Uic { get; set; }
+      public int Uic { get; set; }
 
     public InstrumentTypes InstrumentType { get; set; }
 
@@ -133,60 +133,60 @@ namespace Orders.Qte
   public struct EntityId : IEquatable<EntityId>, ISerializable
   {
       public static readonly EntityId Default = new EntityId(0);
-      private readonly long _value;
+      public long Value { get; set; }
 
-      private EntityId(int value) => this._value = (long) value;
+      private EntityId(int value) => Value = (long) value;
 
-      private EntityId(long value) => this._value = value;
+      private EntityId(long value) => Value = value;
 
-      public override string ToString() => this._value.ToString((IFormatProvider) CultureInfo.InvariantCulture);
+      public override string ToString() => Value.ToString((IFormatProvider) CultureInfo.InvariantCulture);
 
-      public void GetObjectData(SerializationInfo info, StreamingContext context) => info?.AddValue("Value", this._value);
+      public void GetObjectData(SerializationInfo info, StreamingContext context) => info?.AddValue("Value", Value);
 
-      public override int GetHashCode() => this._value.GetHashCode();
+      public override int GetHashCode() => Value.GetHashCode();
 
-      public bool Equals(EntityId other) => this._value == other._value;
+      public bool Equals(EntityId other) => Value == other.Value;
 
-      public override bool Equals(object obj) => obj is EntityId other && this.Equals(other);
+      public override bool Equals(object obj) => obj is EntityId other && Equals(other);
 
       public static bool operator ==(EntityId first, EntityId second) => first.Equals(second);
 
       public static bool operator !=(EntityId first, EntityId second) => !(first == second);
 
-      public static implicit operator int(EntityId entityId) => (int) entityId._value;
+      public static implicit operator int(EntityId entityId) => (int) entityId.Value;
 
       public static implicit operator EntityId(int entityId) => new EntityId(entityId);
 
-      public int ToInt32() => (int) this._value;
+      public int ToInt32() => (int) Value;
 
       public EntityId FromInt32(int value) => new EntityId(value);
 
-      public static implicit operator long(EntityId entityId) => entityId._value;
+      public static implicit operator long(EntityId entityId) => entityId.Value;
 
       public static implicit operator EntityId(long entityId) => new EntityId(entityId);
 
-      public long ToInt64() => this._value;
+      public long ToInt64() => Value;
 
       public EntityId FromInt64(long value) => new EntityId(value);
   }
 
   public readonly struct TrailingStop : IEquatable<TrailingStop>
   {
-      public TrailingStop(Decimal distanceToMarket, Decimal step)
+      public TrailingStop(double distanceToMarket, double step)
       {
-          this.DistanceToMarket = distanceToMarket;
-          this.Step = step;
+          DistanceToMarket = distanceToMarket;
+          Step = step;
       }
 
-      public Decimal DistanceToMarket { get; }
+      public double DistanceToMarket { get; }
 
-      public Decimal Step { get; }
+      public double Step { get; }
 
-      public override int GetHashCode() => this.DistanceToMarket.GetHashCode() * 397 ^ this.Step.GetHashCode();
+      public override int GetHashCode() => DistanceToMarket.GetHashCode() * 397 ^ Step.GetHashCode();
 
-      public bool Equals(TrailingStop other) => this.DistanceToMarket.Equals(other.DistanceToMarket) && this.Step.Equals(other.Step);
+      public bool Equals(TrailingStop other) => DistanceToMarket.Equals(other.DistanceToMarket) && Step.Equals(other.Step);
 
-      public override bool Equals(object obj) => obj != null && obj is TrailingStop other && this.Equals(other);
+      public override bool Equals(object obj) => obj != null && obj is TrailingStop other && Equals(other);
 
       public static bool operator ==(TrailingStop first, TrailingStop second) => first.Equals(second);
 

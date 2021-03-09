@@ -4,7 +4,7 @@
     public enum OpenOrderType
     {
         /// <summary>0: Unspecified</summary>
-        Unknown = 0,
+        UnknownOpenOrderType = 0,
         /// <summary>1: Market order</summary>
         Market = 1,
         /// <summary>2: Limit order</summary>
