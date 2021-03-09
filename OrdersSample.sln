@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B35F1B6F-D1B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders", "src\orders\Orders.csproj", "{BC765F2E-9695-45F6-A86D-7AE886DC674B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tbl", "src\tbl\Tbl.csproj", "{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tbl.TestDouble", "src\tbl\Tbl.TestDouble.csproj", "{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

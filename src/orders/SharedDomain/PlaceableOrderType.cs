@@ -6,6 +6,8 @@
         /// <summary>Market Order.</summary>
         Market = 1,
         /// <summary>Limit Order.</summary>
-        Limit = 2
+        Limit = 2,
+        /// <summary>Trailing stop.</summary>
+        TrailingStop = 9,
     }
 }

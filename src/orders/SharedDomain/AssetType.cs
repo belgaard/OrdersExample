@@ -1,4 +1,5 @@
 ﻿using System;
+using Orders.Qte;
 
 namespace Orders.SharedDomain
 {
@@ -10,5 +11,30 @@ namespace Orders.SharedDomain
         Stock = 1,
         /// <summary>Cfd on Stock.</summary>
         CfdOnStock = 2
+    }
+
+    /// <summary>
+    /// Extension methods for AssetTypeMappings.
+    /// </summary>
+    public static class AssetTypeMappingExtensions
+    {
+        /// <summary>Converts AssetType to InstrumentTypes.</summary>
+        public static InstrumentTypes ToInstrumentType(this AssetType? @this)
+        {
+            if (@this == null)
+            {
+                throw new ArgumentNullException(nameof(@this));
+            }
+
+            switch (@this.GetValueOrDefault())
+            {
+                case AssetType.Stock:
+                    return InstrumentTypes.Shares;
+                case AssetType.CfdOnStock:
+                    return InstrumentTypes.Cfd;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

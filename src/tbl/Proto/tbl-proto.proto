@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Tbl.Protos";
+
+service Tbl {
+  // Sends a greeting
+  rpc Place3WayOrder (PlaceOrderRequest) returns (OrderRequestResults);
+}
+
+enum BuySell {
+   Buy = 0;
+   Sell = 1;
+}
+message EntityId {
+   int64 Value = 1;
+}
+enum InstrumentTypes {
+   // this is a composite/flags enumeration
+   None = 0;
+   Shares = 32;
+   Cfd = 128;
+}
+enum OpenOrderDuration {
+   UnknownOpenOrderDuration = 0;
+   GoodTillDate = 1;
+}
+enum OpenOrderRelation {
+   StandAlone = 0;
+   Oco = 1;
+   IfDoneMaster = 2;
+   IfDoneSlave = 3;
+   IfDoneSlaveOco = 4;
+}
+enum OpenOrderType {
+   UnknownOpenOrderType = 0;
+   Market = 1;
+   Limit = 2;
+   Stop = 6;
+}
+message OrderExpireData {
+   google.protobuf.Timestamp ExpireDateTime = 1;
+}
+message PlaceOrderRequest {
+   int32 Uic = 1;
+   InstrumentTypes InstrumentType = 2;
+   BuySell BuySell = 3;
+   double Amount = 4;
+   double Price = 5;
+   OpenOrderType OrderType = 6;
+   OpenOrderDuration OrderDuration = 7;
+   OrderExpireData OrderExpireData = 8;
+   double OrderPriceLevel2 = 9;
+   TrailingStop TrailingStop = 10;
+   OpenOrderRelation OpenOrderRelation = 11;
+   EntityId RelatedPositionId = 12;
+   repeated PlaceRelatedOrderRequest RelatedOrders = 13;
+}
+message OrderRequestResults
+{
+    repeated OrderRequestResult Result = 1;
+}
+message OrderRequestResult
+{
+   EntityId OrderId = 1;
+   bool IsRejected = 2;
+}
+message PlaceRelatedOrderRequest {
+   BuySell BuySell = 1;
+   double Amount = 2;
+   double Price = 3;
+   OpenOrderType OrderType = 4;
+   OpenOrderDuration OrderDuration = 5;
+   OrderExpireData OrderExpireData = 6;
+   TrailingStop TrailingStop = 7;
+   OpenOrderRelation OpenOrderRelation = 8;
+   double OrderPriceLevel2 = 9;
+}
+message TrailingStop {
+   double DistanceToMarket = 1;
+   double Step = 2;
+}
