@@ -8,6 +8,7 @@ using Orders.ExternalDependencies;
 using Orders.Orders;
 using Orders.Orders.PlaceOrder;
 using Orders.SharedDomain;
+using ProtoBuf;
 
 namespace Orders.Qte
 {
@@ -70,23 +71,33 @@ namespace Orders.Qte
         /// <summary>Working until specified date</summary>
         GoodTillDate
     }
-    public struct PlaceRelatedOrderRequest
+    [ProtoContract()]
+    public class PlaceRelatedOrderRequest
     {
+        [ProtoMember(1)]
         public BuySell BuySell { get; set; }
 
+        [ProtoMember(2)]
         public double Amount { get; set; }
 
+        [ProtoMember(3)]
         public double Price { get; set; }
 
+        [ProtoMember(4)]
         public OpenOrderType OrderType { get; set; }
 
+        [ProtoMember(5)]
         public OpenOrderDuration OrderDuration { get; set; }
 
+        [ProtoMember(6)]
         public OrderExpireData? OrderExpireData { get; set; }
 
+        [ProtoMember(7)]
         public TrailingStop? TrailingStop { get; set; }
 
+        [ProtoMember(8)]
         public OpenOrderRelation? OpenOrderRelation { get; set; }
+        [ProtoMember(9)]
         public double? OrderPriceLevel2 { get; set; }
     }
     public struct OrderExpireData
@@ -106,46 +117,62 @@ namespace Orders.Qte
     /// <summary> Cfd </summary>
     Cfd = 128, // 0x00000080
  }
-  public struct PlaceOrderRequest
+[ProtoContract]
+public struct PlaceOrderRequest
   {
-    public int Uic { get; set; }
+      [ProtoMember(1)]
+      public int Uic { get; set; }
 
+      [ProtoMember(2)]
     public InstrumentTypes InstrumentType { get; set; }
 
+    [ProtoMember(3)]
     public BuySell BuySell { get; set; }
 
+    [ProtoMember(4)]
     public double Amount { get; set; }
 
+    [ProtoMember(5)]
     public double Price { get; set; }
 
+    [ProtoMember(6)]
     public OpenOrderType OrderType { get; set; }
 
+    [ProtoMember(7)]
     public OpenOrderDuration OrderDuration { get; set; }
 
+    [ProtoMember(8)]
     public OrderExpireData? OrderExpireData { get; set; }
+    [ProtoMember(9)]
     public double? OrderPriceLevel2 { get; set; }
+    [ProtoMember(10)]
     public TrailingStop? TrailingStop { get; set; }
+    [ProtoMember(11)]
     public OpenOrderRelation? OpenOrderRelation { get; set; }
+    [ProtoMember(12)]
     public EntityId? RelatedPositionId { get; set; }
+    [ProtoMember(13)]
     public IEnumerable<PlaceRelatedOrderRequest> RelatedOrders { get; set; }
   }
   [Serializable]
+  [ProtoContract]
   public struct EntityId : IEquatable<EntityId>, ISerializable
   {
       public static readonly EntityId Default = new EntityId(0);
-      private readonly long _value;
+      [ProtoMember(1)]
+      public long Value { get; set; }
 
-      private EntityId(int value) => this._value = (long) value;
+      private EntityId(int value) => this.Value = (long) value;
 
-      private EntityId(long value) => this._value = value;
+      private EntityId(long value) => this.Value = value;
 
-      public override string ToString() => this._value.ToString((IFormatProvider) CultureInfo.InvariantCulture);
+      public override string ToString() => this.Value.ToString((IFormatProvider) CultureInfo.InvariantCulture);
 
-      public void GetObjectData(SerializationInfo info, StreamingContext context) => info?.AddValue("Value", this._value);
+      public void GetObjectData(SerializationInfo info, StreamingContext context) => info?.AddValue("Value", this.Value);
 
-      public override int GetHashCode() => this._value.GetHashCode();
+      public override int GetHashCode() => this.Value.GetHashCode();
 
-      public bool Equals(EntityId other) => this._value == other._value;
+      public bool Equals(EntityId other) => this.Value == other.Value;
 
       public override bool Equals(object obj) => obj is EntityId other && this.Equals(other);
 
@@ -153,19 +180,19 @@ namespace Orders.Qte
 
       public static bool operator !=(EntityId first, EntityId second) => !(first == second);
 
-      public static implicit operator int(EntityId entityId) => (int) entityId._value;
+      public static implicit operator int(EntityId entityId) => (int) entityId.Value;
 
       public static implicit operator EntityId(int entityId) => new EntityId(entityId);
 
-      public int ToInt32() => (int) this._value;
+      public int ToInt32() => (int) this.Value;
 
       public EntityId FromInt32(int value) => new EntityId(value);
 
-      public static implicit operator long(EntityId entityId) => entityId._value;
+      public static implicit operator long(EntityId entityId) => entityId.Value;
 
       public static implicit operator EntityId(long entityId) => new EntityId(entityId);
 
-      public long ToInt64() => this._value;
+      public long ToInt64() => this.Value;
 
       public EntityId FromInt64(long value) => new EntityId(value);
   }
