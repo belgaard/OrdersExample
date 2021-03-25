@@ -50,11 +50,9 @@ namespace Orders.Qte
         public Qte(ISessionTradesFacade session) => _session = session;
 
         /// <summary>Place an order.</summary>
-        public IEnumerable<OrderRequestResult> PlaceOrder(PlaceOrderRequest placeOrderRequest)
+        public async Task<IEnumerable<OrderRequestResult>> PlaceOrder(PlaceOrderRequest placeOrderRequest)
         {
-            IEnumerable<OrderRequestResult> result = _session.Place3WayOrder(placeOrderRequest);
-
-            OrderRequestResult[] orderRequestResults = result as OrderRequestResult[] ?? result.ToArray();
+            OrderRequestResult[] orderRequestResults = await _session.Place3WayOrder(placeOrderRequest).ToArrayAsync();
             if (orderRequestResults.Length > 0)
             {
                 // Handle logging ...

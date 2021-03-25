@@ -34,16 +34,16 @@ namespace Orders.Orders.PlaceOrder
             // Call QTE
             await Task.Delay(1);
             if (request.HasMasterOrder() || request.PositionId.AsNullableLong().HasValue)
-                return Place3WayOrderInQuoteEngine(request);
+                return await Place3WayOrderInQuoteEngine(request);
 
             throw new NotSupportedException("Request is neither an OCO, or a related order to existing order");
         }
 
-        private GenericOrderResponse Place3WayOrderInQuoteEngine(PlaceOrderRequest request)
+        private async Task<GenericOrderResponse> Place3WayOrderInQuoteEngine(PlaceOrderRequest request)
         {
             PlaceQteOrderRequest qteOrderRequest = _qteOrderMapper.ToQuoteEnginePlaceOrderRequest(request);
 
-            OrderRequestResult[] orderResults = _qte.PlaceOrder(qteOrderRequest).ToArray();
+            OrderRequestResult[] orderResults = (await _qte.PlaceOrder(qteOrderRequest)).ToArray();
 
             return MapQteResultToResponse(request, orderResults);
         }

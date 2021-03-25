@@ -5,7 +5,6 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Tbl.Protos";
 
 service Tbl {
-  // Sends a greeting
   rpc Place3WayOrder (PlaceOrderRequest) returns (OrderRequestResults);
 }
 

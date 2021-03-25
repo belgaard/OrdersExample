@@ -29,6 +29,8 @@ namespace Orders.Orders.PlaceOrder
 
                 // Only a master order
                 builder.BuildBaseOrder(request, OpenOrderRelation.StandAlone);
+
+                return builder.Build();
             }
             if (request.HasRelatedOrders())
             {

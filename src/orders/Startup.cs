@@ -1,3 +1,7 @@
+using System;
+using System.Net.Http;
+using AutoMapper;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Orders.ExternalDependencies;
 using Orders.Orders.PlaceOrder;
 using Orders.Qte;
+using PlaceOrderRequest = Orders.Qte.PlaceOrderRequest;
 
 namespace Orders
 {
@@ -22,6 +27,8 @@ namespace Orders
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -35,6 +42,15 @@ namespace Orders
             services.AddSingleton<QteOrderMapper>();
             services.AddSingleton<ISessionTradesFacade, SessionTradesFacade>();
             services.AddSingleton<ISessionTrading, SessionTrading>();
+
+            services.AddSingleton(ChannelFactory);
+
+            static Tbl.Protos.Tbl.TblClient ChannelFactory(IServiceProvider a)
+            {
+                HttpClient httpClient = new HttpClient {BaseAddress = new Uri("https://localhost:5001/")};
+                return new Tbl.Protos.Tbl.TblClient(GrpcChannel.ForAddress(httpClient.BaseAddress,
+                    new GrpcChannelOptions {HttpClient = httpClient}));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +73,14 @@ namespace Orders
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    public class OrdersProfile : Profile
+    {
+        public OrdersProfile()
+        {
+            CreateMap<Tbl.Protos.PlaceOrderRequest, PlaceOrderRequest>().ReverseMap(); // TODO: Is it worth it?
         }
     }
 }

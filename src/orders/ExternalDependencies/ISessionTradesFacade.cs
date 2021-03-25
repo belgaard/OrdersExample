@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Orders.Qte;
 
 namespace Orders.ExternalDependencies
 {
     public interface ISessionTradesFacade
     {
-        IEnumerable<OrderRequestResult> Place3WayOrder(PlaceOrderRequest placeOrderRequest);
+        IAsyncEnumerable<OrderRequestResult> Place3WayOrder(PlaceOrderRequest placeOrderRequest);
     }
     internal class SessionTradesFacade : ISessionTradesFacade
     {
@@ -16,6 +17,6 @@ namespace Orders.ExternalDependencies
             _sessionTrading = sessionTrading;
         }
 
-        public IEnumerable<OrderRequestResult> Place3WayOrder(PlaceOrderRequest placeOrderRequest) => _sessionTrading.Place3WayOrder(placeOrderRequest);
+        public IAsyncEnumerable<OrderRequestResult> Place3WayOrder(PlaceOrderRequest placeOrderRequest) => _sessionTrading.Place3WayOrder(placeOrderRequest);
     }
 }
