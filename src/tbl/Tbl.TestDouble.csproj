@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Proto\lean-test.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Proto\lean-test.proto" GrpcServices="Server" />
     <Protobuf Include="Proto\tbl-proto.proto" GrpcServices="Server" />
   </ItemGroup>
 

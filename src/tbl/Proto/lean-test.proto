@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option csharp_namespace = "Tbl.TestDouble.Proto";
+
+service LeanTest
+{
+    rpc WithData(WithDataRequest) returns (LeanTestResult);
+    rpc Build(BuildRequest) returns (LeanTestResult);
+    rpc WithScenarioData(WithScenarioDataRequest) returns (LeanTestResult);
+    rpc CreateContextBuilder(CreateContextBuilderRequest) returns (LeanTestResult);
+    rpc WithClearDataStore(WithClearDataStoreRequest) returns (LeanTestResult);
+}
+
+message WithDataRequest
+{
+    string DataTypeAndName = 1;
+    string Data = 2;
+}
+
+message BuildRequest
+{
+}
+
+message WithScenarioDataRequest
+{
+    string ScenarioName = 1;
+}
+
+message CreateContextBuilderRequest
+{
+}
+
+message WithClearDataStoreRequest
+{
+}
+
+message LeanTestResult
+{
+    int32 Status = 1;
+}

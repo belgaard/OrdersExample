@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using LeanTest.Core.ExecutionHandling;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Tbl.TestDouble.Services;
+using Tbl.TestDouble.TestSetup;
+using Tbl.TestDouble.TestSetup.IoC;
 
 namespace Tbl.TestDouble
 {
@@ -11,10 +14,15 @@ namespace Tbl.TestDouble
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection serviceCollection)
         {
-            services.AddGrpc();
-            services.AddGrpcReflection();
+            serviceCollection.AddGrpc();
+            serviceCollection.AddGrpcReflection();
+            serviceCollection.AddSingleton(sp =>
+            {
+                ContextBuilderFactory.Initialize(CleanContextMode.ReCreate, () => new LeanTestIocContainer(sp));
+                return new WithDater();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -30,6 +38,7 @@ namespace Tbl.TestDouble
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<TblService>();
+                endpoints.MapGrpcService<LeanTestService>();
                 if (env.IsDevelopment())
                     endpoints.MapGrpcReflectionService();
 

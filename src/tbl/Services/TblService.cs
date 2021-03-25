@@ -7,7 +7,7 @@ using Tbl.Protos;
 namespace Tbl.TestDouble.Services
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Instantiated in the Startup class")]
-    public class TblService : Tbl.Protos.Tbl.TblBase
+    public class TblService : Protos.Tbl.TblBase
     {
         private readonly ILogger<TblService> _logger;
         public TblService(ILogger<TblService> logger) => _logger = logger;
