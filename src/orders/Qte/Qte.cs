@@ -5,8 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Orders.ExternalDependencies;
-using Orders.Orders;
-using Orders.Orders.PlaceOrder;
 using Orders.SharedDomain;
 
 namespace Orders.Qte
