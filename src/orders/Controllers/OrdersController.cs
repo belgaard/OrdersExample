@@ -21,6 +21,7 @@ namespace Orders.Controllers
         }
 
         [HttpPost]
+        [Route("place-order")]
         public async Task<ActionResult<GenericOrderResponse>> PlaceOrderAsync([Required, FromBody] PlaceOrderRequest placeOrderRequest)
         {
             return await _placeOrderRequestHandler.ProcessAsync(placeOrderRequest);
