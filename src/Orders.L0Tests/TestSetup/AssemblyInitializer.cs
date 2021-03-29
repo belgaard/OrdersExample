@@ -1,30 +1,34 @@
 using LeanTest;
-using LeanTest.Xunit;
+using LeanTest.Core.ExecutionHandling;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Orders.L0Tests.TestSetup;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Orders.L0Tests.TestSetup.IoC;
-
-[assembly: AssemblyFixture(typeof(AssemblyInitializer))]
-[assembly: Xunit.TestFramework("LeanTest.Xunit.XunitExtensions.XunitTestFrameworkWithAssemblyFixture", "LeanTest.Xunit")]
 
 namespace Orders.L0Tests.TestSetup
 {
     /// <summary>Does the setup which must must be done consistently across all tests in the assembly.</summary>
-    public sealed class AssemblyInitializer
+    [TestClass]
+    public static class AssemblyInitializer
     {
-        public AssemblyInitializer()
+        [AssemblyInitialize]
+        public static void AssemblyInitialize(TestContext _)
         {
+            // The .NET Core web application factory is documented here
+            // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.testing.webapplicationfactory-1?view=aspnetcore-5.0
             static WebApplicationFactory<Startup> FactoryFactory()
             {
                 var factory = new WebApplicationFactory<Startup>();
                 factory = factory.WithWebHostBuilder(builder =>
                     builder
                         .ConfigureTestServices(L0CompositionRootForTest.Initialize));
-
+ 
                 return factory;
             }
             AspNetCoreContextBuilderFactory.Initialize(FactoryFactory, provider => new IocContainer(provider));
         }
+
+        [AssemblyCleanup]
+        public static void AssemblyCleanup() => ContextBuilderFactory.Cleanup();
     }
 }
