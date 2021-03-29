@@ -23,4 +23,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mocks\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\orders\Orders.csproj" />
+  </ItemGroup>
+
 </Project>
