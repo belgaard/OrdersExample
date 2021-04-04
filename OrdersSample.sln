@@ -9,7 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders", "src\orders\Orders
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tbl.TestDouble", "src\tbl\Tbl.TestDouble.csproj", "{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.L0Tests", "src\Orders.L0Tests\Orders.L0Tests.csproj", "{A3818765-D216-4C74-8C5C-09D23500137B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.L0Tests", "src\Orders.L0Tests\Orders.L0Tests.csproj", "{A3818765-D216-4C74-8C5C-09D23500137B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{03A4B224-12B8-4429-8E50-D1A5A4532935}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestPlans", "TestPlans", "{49DD5C69-0C3F-48D1-A522-C95829753D3E}"
+	ProjectSection(SolutionItems) = preProject
+		Orders.md = Orders.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +71,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BC765F2E-9695-45F6-A86D-7AE886DC674B} = {B35F1B6F-D1B4-4507-A5EC-C590CF2760EE}
 		{A4DF6111-BC09-4918-85E9-1A9C9F4CF7EA} = {B35F1B6F-D1B4-4507-A5EC-C590CF2760EE}
+		{49DD5C69-0C3F-48D1-A522-C95829753D3E} = {03A4B224-12B8-4429-8E50-D1A5A4532935}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {02BB750D-B841-4D28-8773-D0B7EA97449A}
