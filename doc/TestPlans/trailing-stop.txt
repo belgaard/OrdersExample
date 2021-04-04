@@ -1,0 +1,5 @@
+BuySellType: buy, sell
+PositionID: valid, invalid, notThere
+Distance: valid, invalid, notThere
+Step: valid, invalid, notThere
+Asset: tradable, notTradable
