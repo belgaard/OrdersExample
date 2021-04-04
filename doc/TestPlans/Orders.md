@@ -4,7 +4,7 @@
 
 ## Input and Stakeholders
 
-Here you will add available documentation which this test plan is based upon,
+Available documentation which this test plan is based upon,
 - Requirements document
 - Solution Design document
 - Endpoint documentation
@@ -14,50 +14,114 @@ Stakeholders,
 
 ## Test Analysis
 
-Here you will analyze and document the testing needed in order to get sufficient confidence.
+### Dimensions
 
-This is a combinatorial analysis based on dimensions (input and existing state) and relevant values.
-See more details here: https://wiki/display/OpenAPI/Test+Analysis
+The possible dimensions identified are the following,
 
-### Target Areas and Dimensions
+| Input parameter | Possible values |
+| --------------- | --------------- |
+| Asset type | stock, CFD |
+| Order type | limit, trailing step |
+| Buy/sell type | buy, sell |
+| Order duration | (a date with time) |
+| Id | (an integer) |
+| Price | (a decimal number) |
+| Amount | (a decimal number) |
+| Position ID | (an integer) |
+| Distance | (a decimal number) |
+| Step | (a decimal number) |
 
-Here you will identify general dimensions for the entire service. This is sometimes useful, but can be omitted if it does not seem to provide value.
+| IC item | Possible values |
+| --------------- | --------------- |
+| Asset |  |
+| Logged-in user |  |
 
-For the example service we have identified the following dimensions,
+Requirements indicate interaction among several dimensions, as e.g. it may be allowed to sell an asset that the logged-in user does not own, but this depends on at least the logged-in user, the asset type and a concrete asset IC item. However, by closer inspection of the requirements, architectural documentation, and actual code paths, it can be concluded that this functionality is entirely implemented outside the BC and is thus not relevant to cover. It can also be concluded that the two asset types can be collapsed into a single equivalence class.
 
-- Authorization
-- End-point
-- ...
+Armed with this knowledge, we can conclude that some of the dimensions don't contribute to the combinatorial explosion for a given area (order type), as we can use any asset type and we can assume that the user is authenticated and that authorization to trade the asset is handled outside the BC. Therefore, we will omit these dimensions from further analysis.
+
+The dimensions left to consider are,
+
+| Input parameter | Possible values |
+| --------------- | --------------- |
+| Order type | limit, trailing step |
+| Buy/sell type | buy, sell |
+| Order duration | (a date with time) |
+| Id | (an integer) |
+| Price | (a decimal number) |
+| Amount | (a decimal number) |
+| Position ID | (an integer) |
+| Distance | (a decimal number) |
+| Step | (a decimal number) |
+
+| IC item | Possible values |
+| --------------- | --------------- |
+| Asset |  |
+
+Based on requirements, it seems that interactions vary significantly for different order types. We therefore decide in the following to *divide into areas by order type*, so that we have one area for limit entry orders and another area for trailing step related orders.
 
 ### Test Scenarios
 
-Here you will identify "scenarios", which are essentially headlines, or groupings, of individual test cases. See more details here: https://wiki/pages/viewpage.action?pageId=92233716#TestPlanGuidelines(Feature&ServiceGroup)-TestScenarios. For consistency across all services, you can use the categories from here https://wiki/display/OpenAPI/Test+Glossary
-
-The following test scenarios were derived for the example service,
+Within the BC, the responsibilities of the Order service are (1) advanced input parameter validation, and (2) mapping combinations of input parameters to the API of the dependent TBL service (see Fig. 3), which will then do the actual order placement.
 
 | Scenario                   | Category                 | Comments | Scenario ID     |
 | -------------------------- | ------------------------ | -------- | --------------- |
-| Access to anonymous end-points, restricted access to end-points which require authorization. | Security |          | Authorization |
-| Core functionality | CoreFunctionality        |          | BasicFunctional |
+| Simple input parameter validation | InputValidation |          | InputValidation |
+| Advanced input parameter validation | CoreFunctionality |          | AdvancedInputValidation |
+| Mapping combinations of input parameters | CoreFunctionality        |          | Mapping |
 
-### *Autorization controller* aka "auth"
+### Target Area: Limit Order Type
 
-Dimensions,
-- Authorization: Authorized, NotAutorized
-- End-point: anon, requires-auth
 
-Since we have two dimensions, each with two values, we have four combinations in total.
 
-We have decided that *Authorized/anon* can be omitted without significant loss of confidence, so we leave the Test case column blank for this combination.
+### Target Area: Trailing Stop Order Type
 
-| Authorization | End-point  | Test case |Comments |
-| ------------------------- | ----------------------------- | --------- |--------- |
-| NotAutorized | anon         | AnonMustReturnOkWhenNotAuthenticated ||
-| Authorized | anon |  |Not worth testing|
-| NotAutorized | requires-auth | RequiresAuthMustFailWhenNotAuthenticated ||
-| Authorized | requires-auth | RequiresAuthMustNotFailWhenAuthenticated ||
+First, we consider 1-way interactions. This is typically simple input validations. In our example, this is relevant for the id, price, amount, and order duration parameters. Covering a single invalid value for each is sufficient, so 4 tests will cover these. In the following analysis, we can use any valid value for these dimensions.
+
+| Id       | Price    | Amount   | Duration | Test case |
+| -------- | -------- | -------- | -------- | -------- |
+| ~Invalid | Valid    | Valid    | Valid    | PostOrderMustReportErrorOnInvalidId |
+| Valid    | ~Invalid | Valid    | Valid    | PostOrderMustReportErrorOnInvalidPrice |
+| Valid    | Valid    | ~Invalid | Valid    | PostOrderMustReportErrorOnInvalidAmount |
+| Valid    | Valid    | Valid    | ~Invalid | PostOrderMustReportErrorOnInvalidDuration |
+
+In the following analysis, we can use any valid value for these dimensions. This leaves us the following dimensions to consider,
+
+| Input parameter | Possible values |
+| --------------- | --------------- |
+| Buy/sell type | buy, sell |
+| Position ID | valid, invalid, not there |
+| Distance | valid, invalid, not there |
+| Step | valid, invalid, not there |
+
+| IC item | Possible values |
+| --------------- | --------------- |
+| Asset | tradable, not tradable |
+
+We are down to only 108 combinations, which is manageable, especially if we assume only 2-way interaction, in which case we can reduce the number to 11. But we want to deduce actual interaction, so we continue one step further based on our knowledge about Trading service responsibilities
+
+The parameters position ID, distance and step are handled by advanced input parameter validation. However, looking at requirements and code paths, it is reasonable to assume that validation functionality of the three parameters do not interact. So again, we need 3 tests for invalid values and 3 tests for the values not provided.
+
+| Position ID | Distance | Step  | Test case |
+| -------- | -------- | -------- | -------- | -------- |
+| ~Invalid | Valid    | Valid    | PostOrderMustReportErrorOnInvalidPositionId |
+| Valid | ~Invalid    | Valid    | PostOrderMustReportErrorOnInvalidDistance |
+| Valid | Valid    | ~Invalid    | PostOrderMustReportErrorOnInvalidStep |
+| ~Not there | Valid    | Valid    | PostOrderMustReportErrorOnPositionIdNotThere |
+| Valid | ~Not there    | Valid    | PostOrderMustReportErrorOnDistanceNotThere |
+| Valid | Valid    | ~Not there    | PostOrderMustReportErrorOnStepNotThere |
+
+After this, we can assume that the three parameters above do not contribute to the combinatorial explosion.
+
+The only parameters we still need to consider are the buy/sell type and the asset being tradable or not, in total 4 tests,
+
+| Buy/sell type | Asset | Test case |
+| -------- | -------- | -------- | -------- | -------- |
+| Buy | Tradable   | PostOrderMustBuyWhenAssetIsTradable |
+| Sell | Tradable   | PostOrderMustSellWhenAssetIsTradable |
+| Buy | Not tradable   | PostOrderMustNotBuyWhenAssetIsNotTradable |
+| Sell | Not tradable   | PostOrderMustNotSellWhenAssetIsNotTradable |
 
 ### Out of scope
 
-Here you will mention anything which has been explicitly left out.
-
+Nothing has been explicitly left out, so far.
