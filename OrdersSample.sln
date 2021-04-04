@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{03A4B224-12B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestPlans", "TestPlans", "{49DD5C69-0C3F-48D1-A522-C95829753D3E}"
 	ProjectSection(SolutionItems) = preProject
-		Orders.md = Orders.md
+		doc\TestPlans\Orders.md = doc\TestPlans\Orders.md
 	EndProjectSection
 EndProject
 Global
