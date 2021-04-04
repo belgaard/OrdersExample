@@ -5,6 +5,7 @@ using LeanTest;
 using LeanTest.Core.ExecutionHandling;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LeanTest.MSTest;
+using TestScenarioIdAttribute = LeanTest.Attribute.TestScenarioIdAttribute;
 
 namespace Orders.L0Tests
 {
@@ -23,12 +24,19 @@ namespace Orders.L0Tests
 
             _target = _contextBuilder.GetHttpClient();
         }
-        [TestMethod]
-        public async Task PlaceOrderMustReportErrorWhenInputIsInvalid()
-        {
-            HttpResponseMessage actual = await _target.PostAsync("/orders/place-order", new StringContent("{}", Encoding.UTF8, "application/json"));
 
-            // TODO: Make the test fail for the right reason, e.g. let it test the 4 invalid input combinations.
+        [TestMethod, TestScenarioId("InputValidation")]
+        public async Task PostOrderMustBuyWhenAssetIsTradable()
+        {
+            // Declare BC:
+            _contextBuilder
+                .WithData(TestData.TradableAsset)
+                .Build();
+
+            HttpResponseMessage actual = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.ValidBuyOrder, Encoding.UTF8, "application/json"));
+
+            Assert.IsTrue(actual.IsSuccessStatusCode);
         }
     }
 }
