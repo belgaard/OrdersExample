@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using LeanTest;
 using LeanTest.Core.ExecutionHandling;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LeanTest.MSTest;
+using Orders.Orders;
 using TestScenarioIdAttribute = LeanTest.Attribute.TestScenarioIdAttribute;
 
 namespace Orders.L0Tests
@@ -25,7 +27,7 @@ namespace Orders.L0Tests
             _target = _contextBuilder.GetHttpClient();
         }
 
-        [TestMethod, TestScenarioId("InputValidation")]
+        [TestMethod, TestScenarioId("CoreFunctionality")]
         public async Task PostOrderMustBuyWhenAssetIsTradable()
         {
             // Declare BC:
@@ -37,6 +39,22 @@ namespace Orders.L0Tests
                 _target.PostAsync("/orders/place-order", new StringContent(TestData.ValidBuyOrder, Encoding.UTF8, "application/json"));
 
             Assert.IsTrue(actual.IsSuccessStatusCode);
+        }
+
+        [TestMethod, TestScenarioId("CoreFunctionality")]
+        public async Task PostOrderMustNotBuyWhenAssetIsNotTradable()
+        {
+            // Declare BC:
+            _contextBuilder
+                .WithData(TestData.NonTradableAsset)
+                .Build();
+
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.ValidBuyOrder, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("not allowed to trade"));
         }
     }
 }

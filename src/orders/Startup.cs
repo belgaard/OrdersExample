@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Orders.ExternalDependencies;
+using Orders.InstrumentCache;
 using Orders.Orders.PlaceOrder;
 using Orders.Qte;
 using PlaceOrderRequest = Orders.Qte.PlaceOrderRequest;
@@ -42,6 +43,7 @@ namespace Orders
             services.AddSingleton<QteOrderMapper>();
             services.AddSingleton<ISessionTradesFacade, SessionTradesFacade>();
             services.AddSingleton<ISessionTrading, SessionTrading>();
+            services.AddSingleton<IInstrumentCacheFacade, InstrumentCacheFacade>();
 
             services.AddSingleton(ChannelFactory);
 

@@ -71,7 +71,6 @@ namespace Orders.Orders.PlaceOrder
         public double? OrderPriceLevel2 { get; set; }
         public double Price { get; set; }
         public InstrumentTypes InstrumentType { get; set; }
-        public int Uic { get; set; }
         double? IOrderRequest.StopLimitPrice { get; set; }
         double? IOrderRequest.TrailingStopDistanceToMarket { get; set; }
 

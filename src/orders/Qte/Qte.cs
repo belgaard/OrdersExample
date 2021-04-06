@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Threading.Tasks;
 using Orders.ExternalDependencies;
 using Orders.SharedDomain;
@@ -44,12 +46,20 @@ namespace Orders.Qte
     public class Qte
     {
         private readonly ISessionTradesFacade _session;
+        private readonly IInstrumentCacheFacade _instrumentCache;
 
-        public Qte(ISessionTradesFacade session) => _session = session;
+        public Qte(ISessionTradesFacade session, IInstrumentCacheFacade instrumentCache)
+        {
+            _session = session;
+            _instrumentCache = instrumentCache;
+        }
 
         /// <summary>Place an order.</summary>
         public async Task<IEnumerable<OrderRequestResult>> PlaceOrder(PlaceOrderRequest placeOrderRequest)
         {
+            if (!_instrumentCache.IsInstrumentTradableByUic(placeOrderRequest.Uic))
+                throw new TradeException { Reason = RejectReasons.InstrumentNotAllowed };
+
             OrderRequestResult[] orderRequestResults = await _session.Place3WayOrder(placeOrderRequest).ToArrayAsync();
             if (orderRequestResults.Length > 0)
             {
@@ -195,4 +205,80 @@ public struct PlaceOrderRequest
       public EntityId OrderId { get; }
       public bool IsRejected { get; set; }
   }
-}
+  public class QuoteEngineException : Exception
+  {
+      public QuoteEngineException(string message)
+          : base(message)
+      {
+      }
+
+      public QuoteEngineException()
+          : base("Unexpected exception")
+      {
+      }
+
+      public QuoteEngineException(string message, Exception innerException)
+          : base(message, innerException)
+      {
+      }
+
+      protected QuoteEngineException(SerializationInfo info, StreamingContext context)
+          : base(info, context)
+      {
+      }
+  }
+
+    /// <summary>Reject reasons</summary>
+  public enum RejectReasons
+  {
+    /// <summary>None (-1)</summary>
+    [Description("None (-1)")] None = -1, // 0xFFFFFFFF
+    /// <summary>"All Ok"</summary>
+    [Description("All Ok")] Accepted = 0,
+    /// <summary>"Illegal amount"</summary>
+    [Description("Illegal amount")] IllegalAmount = 3,
+    /// <summary>"Not allowed to trade in this instrument"</summary>
+    [Description("Not allowed to trade in this instrument")] InstrumentNotAllowed = 6,
+  }
+
+  public class TradeException : QuoteEngineException
+  {
+      public RejectReasons Reason { get; set; }
+
+      public bool SkipRejectionLog { get; set; }
+
+      public TradeException(string message, RejectReasons errorCode, bool skipRejectionLog = false)
+          : base(string.Format("{0} ({1})", (object) message, (object) errorCode))
+      {
+          this.Reason = errorCode;
+          this.SkipRejectionLog = skipRejectionLog;
+      }
+
+      public TradeException(
+          string message,
+          Exception innerException,
+          RejectReasons reason,
+          bool skipRejectionLog = false)
+          : base(message, innerException)
+      {
+          this.Reason = reason;
+          this.SkipRejectionLog = skipRejectionLog;
+      }
+
+      public TradeException(string message)
+          : base(message)
+      {
+      }
+
+      public TradeException()
+      {
+      }
+
+      public TradeException(string message, Exception innerException)
+          : base(message, innerException)
+      {
+      }
+
+      [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+      public override void GetObjectData(SerializationInfo info, StreamingContext context) => base.GetObjectData(info, context);
+  }}

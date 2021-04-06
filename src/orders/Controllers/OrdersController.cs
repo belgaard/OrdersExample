@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,8 @@ namespace Orders.Controllers
         [Route("place-order")]
         public async Task<ActionResult<GenericOrderResponse>> PlaceOrderAsync([Required, FromBody] PlaceOrderRequest placeOrderRequest)
         {
-            return await _placeOrderRequestHandler.ProcessAsync(placeOrderRequest);
+            GenericOrderResponse response = await _placeOrderRequestHandler.ProcessAsync(placeOrderRequest);
+            return response.ErrorInfo == null ? response : BadRequest(response); // Not brilliant error handling.
         }
     }
 }

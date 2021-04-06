@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Orders.ExternalDependencies;
 using Orders.Infrastructure.Extensions;
 using Orders.Qte;
 using Orders.SharedDomain;
@@ -22,21 +24,46 @@ namespace Orders.Orders.PlaceOrder
 
         public async Task<GenericOrderResponse> ProcessAsync(PlaceOrderRequest request)
         {
-            // Validate request
-            //_requestValidator.ValidateAndThrow(request);
+            try
+            {
+                // TODO: Validate request (simple input validation)!
 
-            // Domain validation
-            //ValidationResult validationResult =
-            //    await
-            //        _domainValidator.ValidateAsync(ServiceRequest.Create(serviceContext, request))
-            //            .ConfigureAwait(false);
+                // Domain validation
+                //ValidationResult validationResult =
+                //    await
+                //        _domainValidator.ValidateAsync(ServiceRequest.Create(serviceContext, request))
+                //            .ConfigureAwait(false);
 
-            // Call QTE
-            await Task.Delay(1);
-            if (request.HasMasterOrder() || request.PositionId.AsNullableLong().HasValue)
-                return await Place3WayOrderInQuoteEngine(request);
+                // Call QTE
+                await Task.Delay(1);
+                if (request.HasMasterOrder() || request.PositionId.AsNullableLong().HasValue)
+                    return await Place3WayOrderInQuoteEngine(request);
 
-            throw new NotSupportedException("Request is neither an OCO, or a related order to existing order");
+                throw new NotSupportedException("Request is neither an OCO, or a related order to existing order");
+            }
+            catch (TradeException ex)
+            {
+                // Build error response from RejectReason:
+                return ex.Reason switch
+                {
+                    RejectReasons.InstrumentNotAllowed => new GenericOrderResponse
+                    {
+                        ErrorInfo = new ErrorResponse<string>
+                        {
+                            ErrorCode = "The logged-in user is not allowed to trade the instrument."
+                        }
+                    },
+                    RejectReasons.None => throw new NotImplementedException(),
+                    RejectReasons.Accepted => throw new NotImplementedException(),
+                    RejectReasons.IllegalAmount => throw new NotImplementedException(),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            }
+            catch (Exception)
+            {
+                // Build error response from RejectReason
+                return new GenericOrderResponse {ErrorInfo = new ErrorResponse<string> {ErrorCode = "An unexpected error occurred"}};
+            }
         }
 
         private async Task<GenericOrderResponse> Place3WayOrderInQuoteEngine(PlaceOrderRequest request)
