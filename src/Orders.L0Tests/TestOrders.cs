@@ -27,10 +27,58 @@ namespace Orders.L0Tests
             _target = _contextBuilder.GetHttpClient();
         }
 
+        [TestMethod, TestScenarioId("InputValidation")]
+        public async Task PostOrderMustReportErrorWhenInvalidId()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidId, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Invalid Id"));
+        }
+
+        [TestMethod, TestScenarioId("InputValidation")]
+        public async Task PostOrderMustReportErrorWhenInvalidPrice()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidPrice, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Invalid price"));
+        }
+
+        [TestMethod, TestScenarioId("InputValidation")]
+        public async Task PostOrderMustReportErrorWhenInvalidAmount()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidAmount, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Invalid amount"));
+        }
+
+        [TestMethod, TestScenarioId("InputValidation")]
+        public async Task PostOrderMustReportErrorWhenInvalidDuration()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidDuration, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Invalid duration"));
+        }
+
         [TestMethod, TestScenarioId("CoreFunctionality")]
         public async Task PostOrderMustBuyWhenAssetIsTradable()
         {
-            // Declare BC:
+            // Declare IC:
             _contextBuilder
                 .WithData(TestData.TradableAsset)
                 .Build();
@@ -44,7 +92,7 @@ namespace Orders.L0Tests
         [TestMethod, TestScenarioId("CoreFunctionality")]
         public async Task PostOrderMustNotBuyWhenAssetIsNotTradable()
         {
-            // Declare BC:
+            // Declare IC:
             _contextBuilder
                 .WithData(TestData.NonTradableAsset)
                 .Build();

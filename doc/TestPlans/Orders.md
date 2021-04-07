@@ -78,20 +78,16 @@ Within the BC, the responsibilities of the Order service are (1) advanced input 
 | Advanced input parameter validation | CoreFunctionality |          | AdvancedInputValidation |
 | Mapping combinations of input parameters | CoreFunctionality        |          | Mapping |
 
-### Target Area: Limit Order Type
-
-
-
 ### Target Area: Trailing Stop Order Type
 
 First, we consider 1-way interactions. This is typically simple input validations. In our example, this is relevant for the `id`, `price`, `amount`, and `order duration` parameters. Covering a single invalid value for each is sufficient, so 4 tests will cover these. In the following analysis, we can use any valid value for these dimensions.
 
 | Id       | Price    | Amount   | Duration | Test case |
 | -------- | -------- | -------- | -------- | -------- |
-| ~Invalid | Valid    | Valid    | Valid    | PostOrderMustReportErrorOnInvalidId |
-| Valid    | ~Invalid | Valid    | Valid    | PostOrderMustReportErrorOnInvalidPrice |
-| Valid    | Valid    | ~Invalid | Valid    | PostOrderMustReportErrorOnInvalidAmount |
-| Valid    | Valid    | Valid    | ~Invalid | PostOrderMustReportErrorOnInvalidDuration |
+| ~Invalid | Valid    | Valid    | Valid    | PostOrderMustReportErrorWhenInvalidId |
+| Valid    | ~Invalid | Valid    | Valid    | PostOrderMustReportErrorWhenInvalidPrice |
+| Valid    | Valid    | ~Invalid | Valid    | PostOrderMustReportErrorWhenInvalidAmount |
+| Valid    | Valid    | Valid    | ~Invalid | PostOrderMustReportErrorWhenInvalidDuration |
 
 In the following analysis, we can use any valid value for these dimensions. This leaves us the following dimensions to consider,
 
@@ -107,6 +103,12 @@ In the following analysis, we can use any valid value for these dimensions. This
 | Asset | tradable, not tradable |
 
 We are down to only 108 combinations, which is manageable, especially if we assume only 2-way interaction, in which case we can reduce the number to 11. But we want to deduce actual interaction, so we continue one step further based on our knowledge about Trading service responsibilities
+
+> Use the file trailing-stop.txt with the Microsoft PICT tool in order to find the combinations.
+> Find pairwise (2-way) combinations like this,
+> pict .\trailing-stop.txt  > x.txt
+> Find all (5-way) combinations like this,
+> pict .\trailing-stop.txt /o:5 > x.txt
 
 The parameters `position ID`, `distance` and `step` are handled by advanced input parameter validation. However, looking at requirements and code paths, it is reasonable to assume that validation functionality of the three parameters do not interact. So again, we need 3 tests for invalid values and 3 tests for the values not provided.
 
@@ -129,6 +131,8 @@ The only parameters we still need to consider are the `buy/sell type` and the `a
 | Sell | Tradable   | PostOrderMustSellWhenAssetIsTradable |
 | Buy | Not tradable   | PostOrderMustNotBuyWhenAssetIsNotTradable |
 | Sell | Not tradable   | PostOrderMustNotSellWhenAssetIsNotTradable |
+
+### Target Area: Limit Order Type
 
 ### Out of scope
 
