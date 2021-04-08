@@ -39,10 +39,10 @@ namespace Orders.L0Tests
                 .Build();
 
             HttpResponseMessage actual = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.ValidBuyOrder, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.ValidBuy, Encoding.UTF8, "application/json"));
 
             Assert.IsTrue(actual.IsSuccessStatusCode);
-            Assert.AreEqual((TestData.TheInstrumentIdUsedAllOver, BuySell.Buy), _qtePlacedOrderReader.Query()); // Observe the difference between IC and the resulting state. 
+            Assert.AreEqual((TestData.ValidInstrumentId, BuySell.Buy), _qtePlacedOrderReader.Query()); // Observe the difference between IC and the resulting state. 
         }
 
         [TestMethod, TestScenarioId("Core")]
@@ -54,10 +54,10 @@ namespace Orders.L0Tests
                 .Build();
 
             HttpResponseMessage actual = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.ValidSellOrder, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.ValidSell, Encoding.UTF8, "application/json"));
 
             Assert.IsTrue(actual.IsSuccessStatusCode);
-            Assert.AreEqual((TestData.TheInstrumentIdUsedAllOver, BuySell.Sell), _qtePlacedOrderReader.Query()); // Observe the difference between IC and the resulting state. 
+            Assert.AreEqual((TestData.ValidInstrumentId, BuySell.Sell), _qtePlacedOrderReader.Query()); // Observe the difference between IC and the resulting state. 
         }
 
         [TestMethod, TestScenarioId("Core")]
@@ -69,7 +69,7 @@ namespace Orders.L0Tests
                 .Build();
 
             HttpResponseMessage response = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.ValidBuyOrder, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.ValidBuy, Encoding.UTF8, "application/json"));
 
             Assert.IsFalse(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
@@ -85,7 +85,7 @@ namespace Orders.L0Tests
                 .Build();
 
             HttpResponseMessage response = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.ValidSellOrder, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.ValidSell, Encoding.UTF8, "application/json"));
 
             Assert.IsFalse(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
@@ -97,7 +97,7 @@ namespace Orders.L0Tests
         {
             // No IC to declare!
             HttpResponseMessage response = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidId, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.InvalidId, Encoding.UTF8, "application/json"));
 
             Assert.IsFalse(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
@@ -109,7 +109,7 @@ namespace Orders.L0Tests
         {
             // No IC to declare!
             HttpResponseMessage response = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidPrice, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.InvalidPrice, Encoding.UTF8, "application/json"));
 
             Assert.IsFalse(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
@@ -121,7 +121,7 @@ namespace Orders.L0Tests
         {
             // No IC to declare!
             HttpResponseMessage response = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidAmount, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.InvalidAmount, Encoding.UTF8, "application/json"));
 
             Assert.IsFalse(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
@@ -133,7 +133,7 @@ namespace Orders.L0Tests
         {
             // No IC to declare!
             HttpResponseMessage response = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.InvalidDuration, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.InvalidDuration, Encoding.UTF8, "application/json"));
 
             Assert.IsFalse(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
@@ -145,11 +145,9 @@ namespace Orders.L0Tests
         {
             // No IC to declare!
             HttpResponseMessage response = await 
-                _target.PostAsync("/orders/place-order", new StringContent(TestData.OrderWithInvalidPositionId, Encoding.UTF8, "application/json"));
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.InvalidPositionId, Encoding.UTF8, "application/json"));
 
             Assert.IsFalse(response.IsSuccessStatusCode);
-            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Invalid position ID"));
         }
     }
 }
