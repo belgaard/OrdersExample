@@ -149,5 +149,63 @@ namespace Orders.L0Tests
 
             Assert.IsFalse(response.IsSuccessStatusCode);
         }
+
+        [TestMethod, TestScenarioId("AdvancedInput")]
+        public async Task PostOrderMustReportErrorWhenPositionIdNotThere()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.PositionIdNotThere, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+        }
+
+        [TestMethod, TestScenarioId("AdvancedInput")]
+        public async Task PostOrderMustReportErrorWhenDistanceNotThere()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.DistanceNotThere, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Distance"));
+        }
+
+        [TestMethod, TestScenarioId("AdvancedInput")]
+        public async Task PostOrderMustReportErrorWhenStepNotThere()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.StepNotThere, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Step"));
+        }
+
+        [TestMethod, TestScenarioId("AdvancedInput")]
+        public async Task PostOrderMustReportErrorWhenInvalidDistance()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.InvalidDistance, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Distance"));
+        }
+
+        [TestMethod, TestScenarioId("AdvancedInput")]
+        public async Task PostOrderMustReportErrorWhenInvalidStep()
+        {
+            // No IC to declare!
+            HttpResponseMessage response = await 
+                _target.PostAsync("/orders/place-order", new StringContent(TestData.RelatedOrders.InvalidStep, Encoding.UTF8, "application/json"));
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
+            Assert.IsTrue(actual.ErrorInfo.ErrorCode.Contains("Step"));
+        }
     }
 }

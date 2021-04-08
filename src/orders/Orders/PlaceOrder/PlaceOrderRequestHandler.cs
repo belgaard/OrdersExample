@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Orders.ExternalDependencies;
 using Orders.Infrastructure.Extensions;
@@ -15,24 +16,40 @@ namespace Orders.Orders.PlaceOrder
     {
         private readonly Qte.Qte _qte;
         private readonly QteOrderMapper _qteOrderMapper;
+        private BasicOrderRequestValidator _validator;
 
         public PlaceOrderRequestHandler(Qte.Qte qte, QteOrderMapper qteOrderMapper)
         {
             _qte = qte;
             _qteOrderMapper = qteOrderMapper;
+            
+            _validator = new BasicOrderRequestValidator();
         }
 
         public async Task<GenericOrderResponse> ProcessAsync(PlaceOrderRequest request)
         {
             try
             {
-                // TODO: Validate request (simple input validation)!
+                // Validate request:
+                bool isOk = false;
+                StringBuilder errorInfo = new();
+                if (request.HasMasterOrder())
+                {
+                    isOk = _validator.HasOrderTypeSpecificRequiredFields(request, request.OrderType, errorInfo);
+                    if (isOk)
+                        isOk = _validator.AreOrderTypeSpecificRequiredFieldsOk(request, request.OrderType, errorInfo);
+                }
+                else
+                    if (request.HasRelatedOrders())
+                    {
+                        var relatedOrderRequest = request.Orders.First();
+                        isOk = _validator.HasOrderTypeSpecificRequiredFields(relatedOrderRequest, relatedOrderRequest.OrderType, errorInfo);
+                        if (isOk)
+                            isOk = _validator.AreOrderTypeSpecificRequiredFieldsOk(relatedOrderRequest, relatedOrderRequest.OrderType, errorInfo);
+                    }
 
-                // Domain validation
-                //ValidationResult validationResult =
-                //    await
-                //        _domainValidator.ValidateAsync(ServiceRequest.Create(serviceContext, request))
-                //            .ConfigureAwait(false);
+                if (!isOk)
+                    throw new ArgumentException(errorInfo.ToString());
 
                 // Call QTE
                 await Task.Delay(1);
@@ -59,10 +76,10 @@ namespace Orders.Orders.PlaceOrder
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Build error response from RejectReason
-                return new GenericOrderResponse {ErrorInfo = new ErrorResponse<string> {ErrorCode = "An unexpected error occurred"}};
+                return new GenericOrderResponse {ErrorInfo = new ErrorResponse<string> {ErrorCode = $"An unexpected error occurred: '{ex.Message}'"}};
             }
         }
 
@@ -123,6 +140,66 @@ namespace Orders.Orders.PlaceOrder
             }
 
             return response;
+        }
+    }
+
+    public class BasicOrderRequestValidator
+    {
+        public bool AreOrderTypeSpecificRequiredFieldsOk(IOrderRequest orderRequest, PlaceableOrderType? orderType, StringBuilder context)
+        {
+            var invalidFields = new List<string>();
+
+            switch (orderType)
+            {
+                case PlaceableOrderType.Market:
+                case PlaceableOrderType.Limit:
+                {
+                    break;
+                }
+                case PlaceableOrderType.TrailingStop:
+                {
+                    if (orderRequest.TrailingStopDistanceToMarket <= 0)
+                        invalidFields.Add(nameof(IOrderRequest.TrailingStopDistanceToMarket));
+                    if (orderRequest.TrailingStopStep <= 0)
+                        invalidFields.Add(nameof(IOrderRequest.TrailingStopStep));
+                    break;
+                }
+            }
+
+            if (invalidFields.Count > 0)
+            {
+                context.Append($"InvalidRequiredFields: {string.Join(", ", invalidFields)}");
+                return false;
+            }
+            return true;
+        }
+         public bool HasOrderTypeSpecificRequiredFields(IOrderRequest orderRequest, PlaceableOrderType? orderType, StringBuilder context)
+        {
+            var missingFields = new List<string>();
+
+            switch (orderType)
+            {
+                case PlaceableOrderType.Market:
+                case PlaceableOrderType.Limit:
+                {
+                    break;
+                }
+                case PlaceableOrderType.TrailingStop:
+                {
+                    if (orderRequest.TrailingStopDistanceToMarket == null)
+                        missingFields.Add(nameof(IOrderRequest.TrailingStopDistanceToMarket));
+                    if (orderRequest.TrailingStopStep == null)
+                        missingFields.Add(nameof(IOrderRequest.TrailingStopStep));
+                    break;
+                }
+            }
+
+            if (missingFields.Count > 0)
+            {
+                context.Append($"MissingRequiredFields: {string.Join(", ", missingFields)}");
+                return false;
+            }
+            return true;
         }
     }
 }
