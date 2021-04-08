@@ -54,6 +54,18 @@ namespace Orders.L0Tests
             new PlaceOrderRequest
             {
                 Id = 42,
+                BuySell = BuySell.Buy,
+                Price = 42.0,
+                OrderType = PlaceableOrderType.Limit, 
+                OrderDuration = 
+                    new OrderDuration {DurationType = OrderDurationType.GoodTillDate}, 
+                AssetType = AssetType.Stock
+            });
+        public static readonly string ValidSellOrder = Newtonsoft.Json.JsonConvert.SerializeObject(
+            new PlaceOrderRequest
+            {
+                Id = 42,
+                BuySell = BuySell.Sell,
                 Price = 42.0,
                 OrderType = PlaceableOrderType.Limit, 
                 OrderDuration = 

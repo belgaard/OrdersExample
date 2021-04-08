@@ -17,7 +17,9 @@ namespace Orders.L0Tests.TestSetup.IoC
         public static void Initialize(IServiceCollection serviceCollection)
         {
             serviceCollection.RegisterMockForData<IInstrumentCacheFacade, MockForDataInstrumentCacheFacade, Tradable>();
-            serviceCollection.AddSingleton<ISessionTradesFacade, MockSessionTradesFacade>();
+            serviceCollection.AddSingleton<MockSessionTradesFacade>();
+            serviceCollection.AddSingleton<ISessionTradesFacade>(x => x.GetService<MockSessionTradesFacade>());
+            serviceCollection.AddSingleton<IQtePlacedOrderReader>(x => x.GetService<MockSessionTradesFacade>());
         }
 
         /// <summary>We prefer to use test doubles (mocks) which are primed with boundary values (TData). Boundary values are simply passed out via the

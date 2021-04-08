@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using LeanTest.Mock;
 using Orders.ExternalDependencies;
-using Orders.Qte;
 
 namespace Orders.L0Tests.Mocks
 {
@@ -20,13 +18,5 @@ namespace Orders.L0Tests.Mocks
         public void PreBuild() { }
         public void Build(Type type) { }
         public void PostBuild() { }
-    }
-
-    public class MockSessionTradesFacade : ISessionTradesFacade
-    {
-        public async IAsyncEnumerable<OrderRequestResult> Place3WayOrder(PlaceOrderRequest placeOrderRequest)
-        {
-            yield return await Task.FromResult(new OrderRequestResult());
-        }
     }
 }
