@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -33,11 +34,27 @@ namespace Orders.Controllers
                 return BadRequest(new GenericOrderResponse {ErrorInfo = new ErrorResponse<string> {ErrorCode =  "Invalid price"}});
             if (placeOrderRequest.Amount < 0)
                 return BadRequest(new GenericOrderResponse {ErrorInfo = new ErrorResponse<string> {ErrorCode =  "Invalid amount"}});
-            if (placeOrderRequest.OrderDuration.DurationType != OrderDurationType.GoodTillDate)
-                return BadRequest(new GenericOrderResponse {ErrorInfo = new ErrorResponse<string> {ErrorCode =  "Invalid duration"}});
+            if (CheckOrderDuration(placeOrderRequest, out ActionResult<GenericOrderResponse> actionResult)) return actionResult;
 
             GenericOrderResponse response = await _placeOrderRequestHandler.ProcessAsync(placeOrderRequest);
             return response.ErrorInfo == null ? response : BadRequest(response); // Not brilliant error handling.
+        }
+
+        private bool CheckOrderDuration(PlaceOrderRequest placeOrderRequest, out ActionResult<GenericOrderResponse> actionResult)
+        {
+            bool failed = placeOrderRequest.HasMasterOrder() && placeOrderRequest.OrderDuration.DurationType != OrderDurationType.GoodTillDate;
+            failed = failed || placeOrderRequest.HasRelatedOrders() && placeOrderRequest.Orders.First().OrderDuration.DurationType != OrderDurationType.GoodTillDate;
+
+            if (failed)
+            {
+                actionResult = BadRequest(new GenericOrderResponse
+                    {ErrorInfo = new ErrorResponse<string> {ErrorCode = "Invalid duration"}});
+                return true;
+            }
+
+            actionResult = default;
+
+            return false;
         }
     }
 }
