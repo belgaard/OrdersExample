@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestResults\**" />
+    <EmbeddedResource Remove="TestResults\**" />
+    <None Remove="TestResults\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LeanTest.AspNetCore" Version="3.9.3.311" />
     <PackageReference Include="LeanTest.Core" Version="3.9.3.311" />
     <PackageReference Include="LeanTest.JSon" Version="3.9.3.311" />

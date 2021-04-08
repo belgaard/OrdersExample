@@ -74,9 +74,9 @@ Within the BC, the responsibilities of the Order service are (1) advanced input 
 
 | Scenario                   | Category                 | Comments | Scenario ID     |
 | -------------------------- | ------------------------ | -------- | --------------- |
-| Simple input parameter validation | InputValidation |          | InputValidation |
-| Advanced input parameter validation | CoreFunctionality |          | AdvancedInputValidation |
-| Mapping combinations of input parameters | CoreFunctionality        |          | Mapping |
+| Simple input parameter validation | InputValidation |          | Input |
+| Advanced input parameter validation | CoreFunctionality |          | AdvancedInput |
+| Mapping combinations of input parameters for QTE and Tbl | CoreFunctionality        |          | Core |
 
 ### Target Area: Trailing Stop Order Type
 
@@ -114,12 +114,12 @@ The parameters `position ID`, `distance` and `step` are handled by advanced inpu
 
 | Position ID | Distance | Step  | Test case |
 | -------- | -------- | -------- | -------- | -------- |
-| ~Invalid | Valid    | Valid    | PostOrderMustReportErrorOnInvalidPositionId |
-| Valid | ~Invalid    | Valid    | PostOrderMustReportErrorOnInvalidDistance |
-| Valid | Valid    | ~Invalid    | PostOrderMustReportErrorOnInvalidStep |
-| ~Not there | Valid    | Valid    | PostOrderMustReportErrorOnPositionIdNotThere |
-| Valid | ~Not there    | Valid    | PostOrderMustReportErrorOnDistanceNotThere |
-| Valid | Valid    | ~Not there    | PostOrderMustReportErrorOnStepNotThere |
+| ~Invalid | Valid    | Valid    | PostOrderMustReportErrorWhenInvalidPositionId |
+| Valid | ~Invalid    | Valid    | PostOrderMustReportErrorWhenInvalidDistance |
+| Valid | Valid    | ~Invalid    | PostOrderMustReportErrorWhenInvalidStep |
+| ~Not there | Valid    | Valid    | PostOrderMustReportErrorWhenPositionIdNotThere |
+| Valid | ~Not there    | Valid    | PostOrderMustReportErrorWhenDistanceNotThere |
+| Valid | Valid    | ~Not there    | PostOrderMustReportErrorWhenStepNotThere |
 
 After this, we can assume that the three parameters above do not contribute to the combinatorial explosion.
 

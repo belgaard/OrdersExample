@@ -10,13 +10,13 @@ namespace Orders.Orders.PlaceOrder
         int? Id { get; set; }
 
         /// <summary>Order size.</summary>
-        double? Amount { get; set; }
+        decimal? Amount { get; set; }
 
         /// <summary>The direction of the order; buy or sell.</summary>
         BuySell? BuySell { get; set; }
 
         /// <summary>Order Price. Optional for market orders.</summary>
-        double? OrderPrice { get; set; }
+        decimal? OrderPrice { get; set; }
 
         /// <summary>Order type.</summary>
         PlaceableOrderType OrderType { get; set; }
@@ -45,11 +45,11 @@ namespace Orders.Orders.PlaceOrder
         /// <summary>Unique id of the instrument to place the order for.</summary>
         public int? Id { get; set; }
         /// <summary>Order size.</summary>
-        public double? Amount { get; set; }
+        public decimal? Amount { get; set; }
         /// <summary>The direction of the order; buy or sell.</summary>
         public BuySell? BuySell { get; set; }
         /// <summary>Order Price. Optional for market orders.</summary>
-        public double? OrderPrice { get; set; }
+        public decimal? OrderPrice { get; set; }
         /// <summary>Order type.</summary>
         public PlaceableOrderType OrderType { get; set; }
         /// <summary>The Instruments AssetType.</summary>
@@ -69,7 +69,6 @@ namespace Orders.Orders.PlaceOrder
         public OpenOrderRelation? OpenOrderRelation { get; set; }
         public OrderExpireData? OrderExpireData { get; set; }
         public double? OrderPriceLevel2 { get; set; }
-        public double Price { get; set; }
         public InstrumentTypes InstrumentType { get; set; }
         double? IOrderRequest.StopLimitPrice { get; set; }
         double? IOrderRequest.TrailingStopDistanceToMarket { get; set; }
@@ -77,7 +76,7 @@ namespace Orders.Orders.PlaceOrder
         /// <summary>Returns <c>true</c> if request has a master order.</summary>
         internal bool HasMasterOrder() => OrderType == PlaceableOrderType.Limit;
         /// <summary>Returns <c>true</c> if request has related orders related to an existing position using the see cref="PositionId"/> property.</summary>
-        internal bool HasRelatedOrders() => Orders?.Any() == true;
+        internal bool HasRelatedOrders() => Orders?.Any() == true && Orders.First().OrderType == PlaceableOrderType.TrailingStop;
         internal int GetTotalNumberOfOrders()
         {
             int orderCount = 0;
@@ -111,7 +110,5 @@ namespace Orders.Orders.PlaceOrder
             public double? TrailingStopDistanceToMarket { get; set; }
             /// <summary>Step size for trailing stop order.</summary>
             public double? TrailingStopStep { get; set; }
-        double? IOrderRequest.Amount { get; set; }
-        double? IOrderRequest.OrderPrice { get; set; }
     }
 }
