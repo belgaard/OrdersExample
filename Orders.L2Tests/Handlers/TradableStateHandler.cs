@@ -5,7 +5,6 @@ using LeanTest.Core.ExecutionHandling;
 namespace Orders.L2Tests.Handlers
 {
     public record Tradable(in bool IsTradable, in int Uic);
-
     /// <summary>TODO: When production code starts calling the instruments gRPC code, we will handle Tradable here!</summary>
     public class TradableStateHandler : IStateHandler<Tradable>
     {
