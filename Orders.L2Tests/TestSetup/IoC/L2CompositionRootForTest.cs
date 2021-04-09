@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Orders.L2Tests.Handlers;
 
 namespace Orders.L2Tests.TestSetup.IoC
 {
@@ -12,11 +13,7 @@ namespace Orders.L2Tests.TestSetup.IoC
         {
             serviceCollection.AddSingleton(_testEnvironment);
             //serviceCollection.AddSingleton(s => new ClientComponent.ClientComponent(new MockLogger())); // TODO: Proper logging!!!
-            //serviceCollection.RegisterStateHandler<SimulatorHandler, WithDataRequest>()
-            //    .WithDataForStateHandler<SimulatorHandler, DateTime>()
-            //    .WithDataForStateHandler<SimulatorHandler, ClmDataFeedStocksData>()
-            //    .WithInterface<SimulatorHandler, IDataStore>()
-            //    .WithInterface<SimulatorHandler, SimulatorHandler.IDateTime>();
+            serviceCollection.RegisterStateHandler<TradableStateHandler, Tradable>();
 
             return serviceCollection;
         }

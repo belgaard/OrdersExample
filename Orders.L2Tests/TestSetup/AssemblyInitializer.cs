@@ -13,7 +13,7 @@ namespace Orders.L2Tests.TestSetup
             static L2TestEnvironment CreateEnvironment() // So far, we restrict ourselves to a localhost environment.
             {
                 L2TestEnvironment l2TestEnvironment = new();
-                l2TestEnvironment.HttpClient.BaseAddress = new Uri("https://localhost:5001/");
+                l2TestEnvironment.HttpClient.BaseAddress = new Uri("https://localhost:44327/");
 
                 return l2TestEnvironment;
             }

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Orders.ExternalDependencies;
 using Orders.Infrastructure.Extensions;
 using Orders.Qte;
 using Orders.SharedDomain;

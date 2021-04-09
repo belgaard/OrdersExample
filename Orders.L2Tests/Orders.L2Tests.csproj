@@ -13,6 +13,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="TestData\RelatedOrders\ValidBuy.json" />
+    <None Remove="TestData\TradableAsset.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\RelatedOrders\ValidBuy.json" />
+    <EmbeddedResource Include="TestData\TradableAsset.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LeanTest.AspNetCore" Version="3.9.3.311" />
     <PackageReference Include="LeanTest.Core" Version="3.9.3.311" />
     <PackageReference Include="LeanTest.JSon" Version="3.9.3.311" />
@@ -26,10 +36,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Handlers\" />
   </ItemGroup>
 
 </Project>
