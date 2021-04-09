@@ -202,7 +202,7 @@ public struct PlaceOrderRequest
   {
       public OrderRequestResult(EntityId? orderId = null) => OrderId = orderId ?? (EntityId) 0;
 
-      public EntityId OrderId { get; }
+      public EntityId OrderId { get; set; }
       public bool IsRejected { get; set; }
   }
   public class QuoteEngineException : Exception
