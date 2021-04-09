@@ -15,9 +15,9 @@ namespace Orders.L0Tests
 {
     public class TestOrders
     {
-        private ContextBuilder _contextBuilder;
-        private HttpClient _target;
-        private IQtePlacedOrderReader _qtePlacedOrderReader;
+        private readonly ContextBuilder _contextBuilder;
+        private readonly HttpClient _target;
+        private readonly IQtePlacedOrderReader _qtePlacedOrderReader;
 
         public TestOrders(ITestOutputHelper output)
         {
@@ -73,7 +73,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("not allowed to trade"));
+            Assert.Contains("not allowed to trade", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("Core")]
@@ -89,7 +89,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("not allowed to trade"));
+            Assert.Contains("not allowed to trade", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("Input")]
@@ -101,7 +101,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Invalid Id"));
+            Assert.Contains("Invalid Id", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("Input")]
@@ -113,7 +113,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Invalid price"));
+            Assert.Contains("Invalid price", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("Input")]
@@ -125,7 +125,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Invalid amount"));
+            Assert.Contains("Invalid amount", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("Input")]
@@ -137,7 +137,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Invalid duration"));
+            Assert.Contains("Invalid duration", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("AdvancedInput")]
@@ -169,7 +169,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Distance"));
+            Assert.Contains("Distance", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("AdvancedInput")]
@@ -181,7 +181,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Step"));
+            Assert.Contains("Step", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("AdvancedInput")]
@@ -193,7 +193,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Distance"));
+            Assert.Contains("Distance", actual.ErrorInfo.ErrorCode);
         }
 
         [Fact, TestScenarioId("AdvancedInput")]
@@ -205,7 +205,7 @@ namespace Orders.L0Tests
 
             Assert.False(response.IsSuccessStatusCode);
             var actual = await response.Content.ReadAsAsync<GenericOrderResponse>();
-            Assert.True(actual.ErrorInfo.ErrorCode.Contains("Step"));
+            Assert.Contains("Step", actual.ErrorInfo.ErrorCode);
         }
     }
 }
