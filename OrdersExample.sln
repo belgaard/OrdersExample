@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.L2Tests", "Orders.L2Tests\Orders.L2Tests.csproj", "{63823383-8903-4780-94AC-590E50857C84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.L2Tests", "src\Orders.L2Tests\Orders.L2Tests.csproj", "{63823383-8903-4780-94AC-590E50857C84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
