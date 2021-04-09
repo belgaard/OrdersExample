@@ -8,6 +8,11 @@ namespace Orders.L0Tests
     {
         public const int ValidInstrumentId = 42;
 
+        public static class MasterOrders
+        {
+            // TODO: Here goes IC for master orders (the limit order type) when we have analysed the need.
+        }
+
         public static class RelatedOrders
         {
             public static readonly string InvalidId = Newtonsoft.Json.JsonConvert.SerializeObject(
