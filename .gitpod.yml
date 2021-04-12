@@ -1,0 +1,3 @@
+tasks:
+  - init: .gitpod.yml
+    command: 'dotnet test ordersexample.sln --logger trx'
