@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using LeanTest;
 using LeanTest.Core.ExecutionHandling;
 using LeanTest.Xunit;
 using Xunit;
@@ -10,25 +9,32 @@ using Orders.Orders;
 using Orders.SharedDomain;
 using Xunit.Abstractions;
 using TestScenarioIdAttribute = LeanTest.Attribute.TestScenarioIdAttribute;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Orders.L0Tests.TestSetup;
+using Orders.L0Tests.TestSetup.IoC;
+using System;
 
 namespace Orders.L0Tests
 {
-    public class TestOrders
+    public sealed class TestOrders : IDisposable
     {
         private readonly ContextBuilder _contextBuilder;
+        private readonly WebApplicationFactory<Startup> _factory;
         private readonly HttpClient _target;
         private readonly IQtePlacedOrderReader _qtePlacedOrderReader;
 
         public TestOrders(ITestOutputHelper output)
         {
             var testContext = new TestContext(output);
-            _contextBuilder = ContextBuilderFactory.CreateContextBuilder()
-                .RegisterAttributes(testContext)
-                .Build();
-
+            _factory = new OrdersExampleWebApplication().Factory;
+            _contextBuilder = new ContextBuilder(new IocContainer(_factory.Services))
+                .RegisterAttributes(testContext);
+            _target = _factory.CreateClient();
             _qtePlacedOrderReader = _contextBuilder.GetInstance<IQtePlacedOrderReader>();
-            _target = _contextBuilder.GetHttpClient();
         }
+
+        /// <summary>The factory is not automatically disposed.</summary>
+        public void Dispose() => _factory.Dispose();
 
         [Fact, TestScenarioId("Core")]
         public async Task PostOrderMustBuyWhenAssetIsTradable()

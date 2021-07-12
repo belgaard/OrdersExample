@@ -2,17 +2,14 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Net.Client;
-using LeanTest;
-using LeanTest.Core.ExecutionHandling;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Orders.L0Tests.TestSetup
 {
     public static class GrpcExtensions
     {
-        public static GrpcChannel GetGrpcChannel(this ContextBuilder contextBuilder)
+        public static GrpcChannel GetGrpcChannel(this WebApplicationFactory<Startup> factory)
         {
-            WebApplicationFactory<Startup> factory = contextBuilder.GetFactory<Startup>();
             HttpClient client = factory.CreateDefaultClient(new ResponseVersionHandler());
             return GrpcChannel.ForAddress(client.BaseAddress, new GrpcChannelOptions
             {

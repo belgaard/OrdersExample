@@ -13,10 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LeanTest.AspNetCore" Version="4.1.0.323" />
-    <PackageReference Include="LeanTest.Core" Version="4.1.0.323" />
-    <PackageReference Include="LeanTest.JSon" Version="4.1.0.323" />
-    <PackageReference Include="LeanTest.xUnit" Version="4.1.0.323" />
+    <PackageReference Include="LeanTest.Core" Version="4.4.0.329" />
+    <PackageReference Include="LeanTest.JSon" Version="4.4.0.329" />
+    <PackageReference Include="LeanTest.xUnit" Version="4.4.0.329" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.7" />
