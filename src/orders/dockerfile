@@ -1,18 +1,22 @@
-FROM artifacts.cf.saxo/docker-base/base/saxo-dotnet-sdk:5.0-alpine-ci-1.0.20 AS build
-WORKDIR /sln
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# Copy project file and restore
-COPY "./orders.csproj" "./src/orders/"
-RUN dotnet restore ./src/orders/orders.csproj -s https://artifacts.cf.saxo/artifactory/api/nuget/ThirdPartyNuget
-
-# Copy the actual source code
-COPY "." "./src/orders"
-
-# Build and publish the app
-RUN dotnet publish "./src/orders/orders.csproj" -c Release -o /app/publish
-
-#FINAL image
-FROM artifacts.cf.saxo/docker-base/base/saxo-dotnet-sdk:5.0-alpine-ci-1.0.20
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
-COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "orders.dll"]
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["src/orders/Orders.csproj", "src/orders/"]
+RUN dotnet restore "src/orders/Orders.csproj"
+COPY . .
+WORKDIR "/src/src/orders"
+RUN dotnet build "Orders.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Orders.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Orders.dll"]
