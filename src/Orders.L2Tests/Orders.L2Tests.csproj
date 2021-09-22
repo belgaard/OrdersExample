@@ -23,18 +23,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LeanTest.AspNetCore" Version="4.4.0.329" />
-    <PackageReference Include="LeanTest.Core" Version="4.4.0.329" />
-    <PackageReference Include="LeanTest.JSon" Version="4.4.0.329" />
-    <PackageReference Include="LeanTest.xUnit" Version="4.4.0.329" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="LeanTest.AspNetCore" Version="4.10.4.399" />
+    <PackageReference Include="LeanTest.Core" Version="4.10.4.399" />
+    <PackageReference Include="LeanTest.JSon" Version="4.10.4.399" />
+    <PackageReference Include="LeanTest.xUnit" Version="4.10.4.399" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.10" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="coverlet.collector" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
