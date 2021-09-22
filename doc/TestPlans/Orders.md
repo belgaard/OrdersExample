@@ -1,6 +1,6 @@
 # Test Plan for the Orders Service
 
-We consider the Orders service to constitute a bounded context (BC), i.e. it makesense to test the service itself in isolation.
+We consider the Orders service to constitute a bounded context (BC), i.e. it makes sense to test the service itself in isolation.
 
 [TOC]
 
